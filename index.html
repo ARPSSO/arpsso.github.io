@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="./statics/js/jquery.min.js" rel="script"></script>
+    <script src="./statics/js/Popper.js" rel="script"></script>
+    <script rel="script" src="./statics/js/bootstrap.bundle.js"></script>
+    <script rel="script" src="./statics/js/arpsso.df8a6.js" integrity="sha384-8PT9zqcjPDMDteg3HjRQxTtG9BNRe8G/oJsaUio2SrhIillTtgg8bW0eU3/fdDSK"
+    ></script>
+</head>
+
+<body>
+    <script>
+        var idpWindow = window.parent
+        var rpWindow = window.parent.opener
+        var rpOrigin
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const cid = urlParams.get('cid')
+        const idpOrigin = urlParams.get('from')
+
+        $(document).ready(function () {
+            if (cid != null & rpWindow != null) {
+                AuthRPIdentity()
+            } else {
+                window.alert("This page only supports ARPSSO service calls. \nFor more information, please visit: https://arpsso.live. \nThis page will close automatically, if it does not close properly, please close this window manually!");
+                setTimeout(function () {
+                    window.close();
+                }, 1000);
+            }
+        })
+
+        function AuthRPIdentity() {
+            rpWindow.postMessage("GetIdentity", "*")
+            window.addEventListener("message", onRecieveMessageFromRP)
+        }
+
+        function onRecieveMessageFromRP(event) {
+            if (event.source !== rpWindow || typeof event.data !== 'string' || !event.data.startsWith('0x')) {
+                return
+            }
+            console.log("recieve identity form RP")
+            rpOrigin = event.origin
+            if (arpsso.verifySig(rpOrigin, cid, event.data)) {
+                $("#output").text(rpOrigin)
+                $("#output").css("color", "green");
+                idpWindow.postMessage("true", idpOrigin)
+                window.removeEventListener("message", onRecieveMessageFromRP)
+                window.addEventListener("message", onRecieveMessageFromeIdP)
+            } else {
+                $("#output").text("RP origin error, please close and try again.")
+                $("#output").css("color", "red");
+                console.log("VerifySig false. \nrpOrigin=" + rpOrigin + "\ncid=" + cid)
+                idpWindow.postMessage("false", idpOrigin)
+                window.removeEventListener("message", onRecieveMessageFromRP)
+            }
+        }
+
+        function onRecieveMessageFromeIdP(event) {
+            if (event.source == idpWindow && event.origin == idpOrigin) {
+                window.removeEventListener("message", onRecieveMessageFromeIdP)
+                rpWindow.postMessage(event.data, rpOrigin)
+            }
+        }
+
+    </script>
+    <div id="output"></div>
+</body>
+
+</html>
