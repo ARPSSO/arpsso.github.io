@@ -2,10 +2,7 @@
 <html>
 
 <head>
-    <script src="./statics/js/jquery.min.js" rel="script"></script>
-    <script src="./statics/js/Popper.js" rel="script"></script>
-    <script rel="script" src="./statics/js/bootstrap.bundle.js"></script>
-    <script rel="script" src="./statics/js/arpsso.df8a6.js" integrity="sha384-8PT9zqcjPDMDteg3HjRQxTtG9BNRe8G/oJsaUio2SrhIillTtgg8bW0eU3/fdDSK"
+    <script rel="script" src="./arpsso.df8a6.js" integrity="sha384-8PT9zqcjPDMDteg3HjRQxTtG9BNRe8G/oJsaUio2SrhIillTtgg8bW0eU3/fdDSK"
     ></script>
 </head>
 
@@ -20,7 +17,7 @@
         const cid = urlParams.get('cid')
         const idpOrigin = urlParams.get('from')
 
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', function () {
             if (cid != null & rpWindow != null) {
                 AuthRPIdentity()
             } else {
@@ -43,14 +40,14 @@
             console.log("recieve identity form RP")
             rpOrigin = event.origin
             if (arpsso.verifySig(rpOrigin, cid, event.data)) {
-                $("#output").text(rpOrigin)
-                $("#output").css("color", "green");
+                document.getElementById("output").textContent = rpOrigin;
+                document.getElementById("output").style.color = "green";
                 idpWindow.postMessage("true", idpOrigin)
                 window.removeEventListener("message", onRecieveMessageFromRP)
                 window.addEventListener("message", onRecieveMessageFromeIdP)
             } else {
-                $("#output").text("RP origin error, please close and try again.")
-                $("#output").css("color", "red");
+                document.getElementById("output").textContent = "RP origin error, please close and try again.";
+                document.getElementById("output").style.color = "red";
                 console.log("VerifySig false. \nrpOrigin=" + rpOrigin + "\ncid=" + cid)
                 idpWindow.postMessage("false", idpOrigin)
                 window.removeEventListener("message", onRecieveMessageFromRP)
