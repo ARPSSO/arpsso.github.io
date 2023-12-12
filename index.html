@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script rel="script" src="./arpsso.df8a6.js" integrity="sha384-8PT9zqcjPDMDteg3HjRQxTtG9BNRe8G/oJsaUio2SrhIillTtgg8bW0eU3/fdDSK"
+    <script rel="script" src="./dvf.c27f2.js" integrity="sha384-XHKYNNRqGI5twtf9hMl6gAL9I827Zmg3kOukPzic9FhjJ0lYjfSpu0UIW2cRTMiw"
     ></script>
 </head>
 
@@ -39,7 +39,7 @@
             }
             console.log("recieve identity form RP")
             rpOrigin = event.origin
-            if (arpsso.verifySig(rpOrigin, cid, event.data)) {
+            if (dvf.verifySig(rpOrigin, cid, event.data)) {
                 document.getElementById("output").textContent = rpOrigin;
                 document.getElementById("output").style.color = "green";
                 idpWindow.postMessage("true", idpOrigin)
