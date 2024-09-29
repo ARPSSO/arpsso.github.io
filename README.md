@@ -6,7 +6,7 @@
   <p align="center">
     A trusted third-party responsible for RP verification and data forward through the browser's front channel in ARPSSO. 
     <br />
-    <a href="https://arpsso.live/"><strong>View ARPSSO Demo »</strong></a>
+    <a href="https://arpsso.hejunlin.cn"><strong>View ARPSSO Demo »</strong></a>
   </p>
 </div>
 
